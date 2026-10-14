@@ -8,7 +8,7 @@
  *
  * Clock tree diagram from RM0008 page 126 was provided to make
  * clock setup more clear. It is to be found at 'docs/clock-tree.png'.
- * 
+ *
  * This function only sets up system clocks. Clock setup and division
  * for peripherals is a responsibility, of peripherals. There is
  * no security against peripherals messing with clocks at the same
