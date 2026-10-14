@@ -27,7 +27,7 @@ INCLUDES := platform $(call rgetdirs,drivers*) $(call rgetdirs,libs*)
 
 SRCS :=                           \
   main.cpp                        \
-  platform/startup_stm32f10x_md.s \
+  $(call rwildcard,platform,*.s)  \
   $(call rwildcard,platform,*.c)  \
   $(call rwildcard,drivers,*.cpp) \
   $(call rwildcard,libs,*.cpp)
