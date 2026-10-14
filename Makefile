@@ -23,15 +23,21 @@ rgetdirs  = $(foreach dir,$(wildcard $1),$(call rgetdirs,$(dir)/**) $(filter-out
 makedir = mkdir -p "$(1)"
 
 # I don't fully understand how it works, but here's the source: https://stackoverflow.com/a/14447924
-INCLUDES := $(call rgetdirs,drivers*) $(call rgetdirs,libs*)
-SRCS     := main.cpp startup/startup.c $(call rwildcard,drivers,*.cpp) $(call rwildcard,libs,*.cpp)
+INCLUDES := platform $(call rgetdirs,drivers*) $(call rgetdirs,libs*)
 
-CFLAGS   := -std=c23 $(LDFLAGS) $(addprefix -I,$(INCLUDES))
-CXXFLAGS := -std=c++23 $(LDFLAGS) $(addprefix -I,$(INCLUDES)) -pedantic-errors -Werror
+SRCS :=                           \
+  main.cpp                        \
+  platform/startup_stm32f10x_md.s \
+  $(call rwildcard,platform,*.c)  \
+  $(call rwildcard,drivers,*.cpp) \
+  $(call rwildcard,libs,*.cpp)
 
-ARMFLAGS := -mcpu=cortex-m4 -mlittle-endian -mthumb
+ARMFLAGS := -mcpu=cortex-m3 -mlittle-endian -mthumb
 
-LDFLAGS  += $(ARMFLAGS) -Tstartup/linker_script.ld -Wl,--gc-sections -Wl,-Map,$(TARGET).map \
+CFLAGS   := -std=c23   $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES))
+CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) -pedantic-errors -Werror
+
+LDFLAGS  += $(ARMFLAGS) -Tplatform/linker_script.ld -Wl,--gc-sections -Wl,-Map,$(TARGET).map \
   --specs=nano.specs --specs=nosys.specs -nodefaultlibs -nolibc -nostdlib -lgcc
 
 OBJS := \
