@@ -1,3 +1,4 @@
 1. Compilation and upload on chip. https://github.com/augustofg/STM32F103C8T6-Examples/tree/master
 2. Linker script. https://github.com/alighareeb01/LinkerScript-File-and-StartUpCode-for-Stm32f103c8T6-BluePill-
 3. Everything else in the "platform" folder. https://github.com/doceme/stm32_template/tree/master
+4. Applied (patch)[https://gist.github.com/timbrom/1942280] to `platform/core_cm3.c`
