@@ -1,5 +1,5 @@
-#ifndef MIKROTIK_IOT_TEST_LIBS_STDINT_HPP_
-#define MIKROTIK_IOT_TEST_LIBS_STDINT_HPP_
+#ifndef MIKROTIK_IOT_TEST_LIBS_STDINT_HPP
+#define MIKROTIK_IOT_TEST_LIBS_STDINT_HPP
 
 // signed integer types
 
@@ -29,4 +29,4 @@ constexpr uint16 uint16_MAX = __UINT16_MAX__;
 constexpr uint32 uint32_MAX = __UINT32_MAX__;
 constexpr uint64 uint64_MAX = __UINT64_MAX__;
 
-#endif  // MIKROTIK_IOT_TEST_LIBS_STDINT_HPP_
+#endif  // MIKROTIK_IOT_TEST_LIBS_STDINT_HPP
