@@ -12,4 +12,6 @@ void clockInit()
     /// MOVE IT TO UART SETUP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // USART1 is powered by ABP2, we need to enable clock to it
     // SET_BIT(RCC->APB2ENR, RCC_APB2ENR_USART1EN);
+
+    // USART RM0008 page 167 INPUT CONFIG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
