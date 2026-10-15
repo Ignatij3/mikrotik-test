@@ -8,7 +8,7 @@
  *
  * @attention The class cannot check whether an actual LED is physically present on the specified GPIO.
  */
-class Led final {
+class Led {
 public:
     /**
      * Constructor sets up configuration of an LED.
