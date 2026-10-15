@@ -1,6 +1,6 @@
 #include "pin.hpp"
 
-explicit Pin::Pin(GPIO_TypeDef* port, uint32 pin, Config cfg) :
+Pin::Pin(GPIO_TypeDef* port, uint32 pin, Config cfg) :
     Port_(port),
     PinN_(pin),
     Conf_(cfg)
