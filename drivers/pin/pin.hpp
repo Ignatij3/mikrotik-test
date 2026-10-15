@@ -68,11 +68,6 @@ public:
      */
     bool Read() const;
 
-    /**
-     * Toggle will toggle the state of the pin.
-     */
-    void Toggle() const;
-
 private:
     GPIO_TypeDef* Port_;  //!< GPIO port.
     const uint32  PinN_;  //!< GPIO number.
