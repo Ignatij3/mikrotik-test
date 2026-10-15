@@ -33,6 +33,11 @@ Pin::~Pin()
 
 void Pin::Write(bool state) const
 {
+    if (!(Conf_ == Config::OUTPUT_OD || Conf_ == Config::OUTPUT_PP)) {
+        // log error
+        return;
+    }
+
     if (Port_ == GPIOA) {
         CLEAR_BIT(GPIOA->ODR, 1 << PinN_);
         SET_BIT(GPIOA->ODR, (uint32)state << PinN_);
@@ -49,6 +54,11 @@ void Pin::Write(bool state) const
 
 bool Pin::Read() const
 {
+    if (!(Conf_ == Config::INPUT_ANALOG || Conf_ == Config::INPUT_FLOATING || Conf_ == Config::INPUT_PULL)) {
+        // log error
+        return false;
+    }
+
     uint32 data = 0;
 
     if (Port_ == GPIOA) {
