@@ -50,3 +50,49 @@ To flash binaries onto the device, run
 ```sh
 $ make flash
 ```
+
+### Configuration
+
+To change BAUD rate and LED source pin, compilation arguments are provided.<br>
+BAUD rate may be one of the following:
+- 2400
+- 9600
+- 19200
+- 57600
+- 115200
+- 230400
+- 460800
+- 921600
+- 2250000
+
+BAUD rate is given with `BAUDRATE` argument:
+```bash
+$ make BAUDRATE=230400
+```
+
+LEDs can also be configured with a total of 4 pin alternatives, 2 for each LED:
+- LED 1 can be on either B6 or B7
+- LED 2 can be on either B8 or B9
+
+Those are configured in the same way as `BAUDRATE` is, with variables `LED1_PIN` and `LED2_PIN` respectively:
+```bash
+$ make LED1_PIN=B7
+```
+```bash
+$ make LED1_PIN=B6 LED2_PIN=B9
+```
+
+Default values
+- `BAUDRATE`, 9600
+- `LED1_PIN`, B6
+- `LED2_PIN`, B8
+
+### Testing
+
+Baud rates 9600 and 115200 were tested, no issues found.
+LEDs were tested with all 4 alternatives, all 4 work.
+
+### Known issues
+
+1. First time setting LEDs they light up only for a brief moment.
+2. Program is blocked with setting LEDs, to fix it external interrupts (or timer interrupts) should be used.
