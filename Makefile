@@ -1,6 +1,10 @@
 # enable parallel build and silence commands
 MAKEFLAGS += --jobs=32 --silent
 
+BAUDRATE ?= 9600
+LED1_PIN ?= B6
+LED2_PIN ?= B8
+
 # output definitions
 BIN_DIR   := bin
 BUILD_DIR := build
@@ -35,7 +39,10 @@ SRCS :=                           \
 ARMFLAGS := -mcpu=cortex-m3 -mlittle-endian -mthumb
 
 CFLAGS   := -std=c23   $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES))
-CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) -pedantic-errors -Werror -fno-exceptions
+
+CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) \
+  -Werror -fno-exceptions                                                 \
+  -DBAUDRATE=$(BAUDRATE) -DLED1_PIN=$(LED1_PIN) -DLED2_PIN=$(LED2_PIN)
 
 LDFLAGS  += $(ARMFLAGS) -Tplatform/linker_script.ld -Wl,--gc-sections -Wl,-Map,$(TARGET).map \
   --specs=nano.specs --specs=nosys.specs -nodefaultlibs -nolibc -nostdlib -lgcc
