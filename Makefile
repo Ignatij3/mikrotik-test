@@ -35,7 +35,7 @@ SRCS :=                           \
 ARMFLAGS := -mcpu=cortex-m3 -mlittle-endian -mthumb
 
 CFLAGS   := -std=c23   $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES))
-CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) -pedantic-errors -Werror
+CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) -pedantic-errors -Werror -fno-exceptions
 
 LDFLAGS  += $(ARMFLAGS) -Tplatform/linker_script.ld -Wl,--gc-sections -Wl,-Map,$(TARGET).map \
   --specs=nano.specs --specs=nosys.specs -nodefaultlibs -nolibc -nostdlib -lgcc
