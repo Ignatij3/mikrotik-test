@@ -2,3 +2,4 @@
 2. Linker script. https://github.com/alighareeb01/LinkerScript-File-and-StartUpCode-for-Stm32f103c8T6-BluePill-
 3. Everything else in the "platform" folder. https://github.com/doceme/stm32_template/tree/master
 4. Applied (patch)[https://gist.github.com/timbrom/1942280] to `platform/core_cm3.c`
+5. openocd -d0 -f ./platform/stm32f103c8.cfg -c init -c "reset halt" -c "flash write_image erase bin/program.bin 0x08000000" -c "reset" -c exit
