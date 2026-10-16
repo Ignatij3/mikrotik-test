@@ -5,6 +5,8 @@ Pin::Pin(GPIO_TypeDef* port, uint32 pin, Config cfg) :
     PinN_(pin),
     Conf_(cfg)
 {
+    EnableClock_();
+
     // 4 bits are used to set pin configuration
     // to move those bits to a correct place, we use pin number (starting with 0), and multiply by 4 (to move 4 bits)
     // but first clear all relevant bits
@@ -19,11 +21,6 @@ Pin::Pin(GPIO_TypeDef* port, uint32 pin, Config cfg) :
         Port_->CRH &= ~(0b1111UL << ((PinN_ - 8) * 4));
         Port_->CRH |= Conf_ << ((PinN_ - 8) * 4);
     }
-
-    // so basically we just enable clock o alternate function and then the peripheral enables clock for itself and it should work
-    // https://community.st.com/stm32-mcus-products-25/stm32f103-alternate-function-selection-for-a-specific-pin-60316
-
-    EnableClock_();
 }
 
 Pin::~Pin()
@@ -38,18 +35,8 @@ void Pin::Write(bool state) const
         return;
     }
 
-    if (Port_ == GPIOA) {
-        CLEAR_BIT(GPIOA->ODR, 1 << PinN_);
-        SET_BIT(GPIOA->ODR, (uint32)state << PinN_);
-
-    } else if (Port_ == GPIOB) {
-        CLEAR_BIT(GPIOB->ODR, 1 << PinN_);
-        SET_BIT(GPIOB->ODR, (uint32)state << PinN_);
-
-    } else if (Port_ == GPIOC) {
-        CLEAR_BIT(GPIOC->ODR, 1 << PinN_);
-        SET_BIT(GPIOC->ODR, (uint32)state << PinN_);
-    }
+    SET_BIT(Port_->BRR, 1 << PinN_);
+    SET_BIT(Port_->ODR, (uint32)state << PinN_);
 }
 
 bool Pin::Read() const
@@ -59,23 +46,13 @@ bool Pin::Read() const
         return false;
     }
 
-    uint32 data = 0;
-
-    if (Port_ == GPIOA) {
-        data = GPIOA->IDR;
-
-    } else if (Port_ == GPIOB) {
-        data = GPIOB->IDR;
-
-    } else if (Port_ == GPIOC) {
-        data = GPIOC->IDR;
-    }
-
-    return READ_BIT(data, 1 << PinN_);
+    return READ_BIT(Port_->IDR, 1 << PinN_);
 }
 
 void Pin::EnableClock_()
 {
+    // so basically we just enable clock o alternate function and then the peripheral enables clock for itself and it should work
+    // https://community.st.com/stm32-mcus-products-25/stm32f103-alternate-function-selection-for-a-specific-pin-60316
     if (Conf_ == Config::ALTERNATE_OD || Conf_ == Config::ALTERNATE_PP) {
         SET_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
     }
