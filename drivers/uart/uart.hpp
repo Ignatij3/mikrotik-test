@@ -52,7 +52,7 @@ public:
      * @param[in] data bytes to be sent over the UART connection.
      * @param[in] size number of bytes to be send.
      */
-    void Send(uint8* data, uint16 size);
+    void Send(char* data, uint16 size);
 
     /**
      * Receive reads data from the UART peripheral.
@@ -65,7 +65,7 @@ public:
      *
      * @return how many bytes were received before an idle frame.
      */
-    uint32 Receive(uint8* data, uint16 size);
+    uint32 Receive(char* data, uint16 size);
 
     /**
      * Receive_Char reads data from the UART peripheral until chr is found.
@@ -79,7 +79,7 @@ public:
      *
      * @return how many bytes were received before an idle frame.
      */
-    uint32 ReceiveChar(uint8* data, uint16 size, char chr);
+    uint32 ReceiveChar(char* data, uint16 size, char chr);
 
 private:
     /**

@@ -69,7 +69,7 @@ Uart::~Uart()
     DisableClock_();
 }
 
-void Uart::Send(uint8* data, uint16 size)
+void Uart::Send(char* data, uint16 size)
 {
     // prodecure described at RM0008 page 792
 
@@ -89,7 +89,7 @@ void Uart::Send(uint8* data, uint16 size)
     }
 }
 
-uint32 Uart::Receive(uint8* data, uint16 size)
+uint32 Uart::Receive(char* data, uint16 size)
 {
     // prodecure described at RM0008 page 795
 
@@ -113,7 +113,7 @@ uint32 Uart::Receive(uint8* data, uint16 size)
     return recv;
 }
 
-uint32 Uart::ReceiveChar(uint8* data, uint16 size, char chr)
+uint32 Uart::ReceiveChar(char* data, uint16 size, char chr)
 {
     uint32 recv;
 

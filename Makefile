@@ -41,11 +41,11 @@ ARMFLAGS := -mcpu=cortex-m3 -mlittle-endian -mthumb
 CFLAGS   := -std=c23   $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES))
 
 CXXFLAGS := -std=c++23 $(ARMFLAGS) $(LDFLAGS) $(addprefix -I,$(INCLUDES)) \
-  -Werror -fno-exceptions                                                 \
+  -Werror -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics   \
   -DBAUDRATE=$(BAUDRATE) -DLED1_PIN=$(LED1_PIN) -DLED2_PIN=$(LED2_PIN)
 
 LDFLAGS  += $(ARMFLAGS) -Tplatform/linker_script.ld -Wl,--gc-sections -Wl,-Map,$(TARGET).map \
-  --specs=nano.specs --specs=nosys.specs -nodefaultlibs -nolibc -nostdlib -lgcc
+  --specs=nano.specs --specs=nosys.specs -nodefaultlibs -nolibc -nostdlib -lgcc 
 
 OBJS := \
   $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(filter %.cpp,$(SRCS))) \
