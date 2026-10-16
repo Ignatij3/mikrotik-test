@@ -53,7 +53,7 @@ OBJS := \
   $(patsubst %.s,$(BUILD_DIR)/%.o,$(filter %.s,$(SRCS)))
 
 # makefile rules
-.PHONY: all clean sources
+.PHONY: all clean sources flash
 all: $(TARGET).elf $(TARGET).bin
 
 clean:
@@ -85,3 +85,6 @@ $(TARGET).elf: $(OBJS)
 
 $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
+
+flash:
+	openocd -d0 -f ./platform/stm32f103c8.cfg -c init -c "reset halt" -c "flash write_image erase $(TARGET).elf" -c "reset" -c exit

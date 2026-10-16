@@ -1,9 +1,11 @@
 #include "uart.hpp"
 
+void uart_init(void);
+
 Uart::Uart(GPIO_TypeDef* rx_port, uint32 rx_pin, GPIO_TypeDef* tx_port, uint32 tx_pin, USART_TypeDef* inst, BaudRate baud) :
     // RX/TX pins configured according to RM0008 page 166, table 24
     Rx_(rx_port, rx_pin, Pin::Config::ALTERNATE_PP),
-    Tx_(rx_port, rx_pin, Pin::Config::ALTERNATE_OD),
+    Tx_(rx_port, rx_pin, Pin::Config::INPUT_FLOATING),
     Instance_(inst)
 {
     EnableClock_();
@@ -27,27 +29,31 @@ Uart::Uart(GPIO_TypeDef* rx_port, uint32 rx_pin, GPIO_TypeDef* tx_port, uint32 t
     // program baud rate
     WRITE_REG(Instance_->BRR, (uint16)baud);
 
-    // set word length to 8 bits
+    // UART needs custom GPIO setup, temporarily here
+    CLEAR_BIT(GPIOA->CRH, 0b1111 << 4);
+    SET_BIT(GPIOA->CRH, 0b1011 << 4);
+
+    // // set word length to 8 bits
     SET_BIT(Instance_->CR1, USART_CR1_M);
 
-    // disable parity control
+    // // disable parity control
     CLEAR_BIT(Instance_->CR1, USART_CR1_PCE);
 
-    // set stop bits to 1
+    // // set stop bits to 1
     CLEAR_BIT(Instance_->CR2, USART_CR2_STOP);
 
-    // disable all flow controls
+    // // disable all flow controls
     CLEAR_BIT(Instance_->CR3, USART_CR3_CTSE);
     CLEAR_BIT(Instance_->CR3, USART_CR3_RTSE);
 
-    // disable half duplex communication (presumably keeps it full duplex)
+    // // disable half duplex communication (presumably keeps it full duplex)
     CLEAR_BIT(Instance_->CR3, USART_CR3_HDSEL);
 
-    // disable transmitter and enable receiver, by default we listen to incoming data
-    CLEAR_BIT(Instance_->CR1, USART_CR1_TE);
+    // // enable transmitter and receiver
     SET_BIT(Instance_->CR1, USART_CR1_RE);
+    SET_BIT(Instance_->CR1, USART_CR1_TE);
 
-    // last, enable USART
+    // // last, enable USART
     SET_BIT(Instance_->CR1, USART_CR1_UE);
 }
 
@@ -67,10 +73,6 @@ void Uart::Send(uint8* data, uint16 size)
 {
     // prodecure described at RM0008 page 792
 
-    // disable receiver and enable transmitter
-    CLEAR_BIT(Instance_->CR1, USART_CR1_RE);
-    SET_BIT(Instance_->CR1, USART_CR1_TE);
-
     for (uint32 i = 0; i < size; i++) {
         // push data to transmit register
         Instance_->DR = data[i];
@@ -85,17 +87,11 @@ void Uart::Send(uint8* data, uint16 size)
     while (!READ_BIT(Instance_->SR, USART_SR_TC)) {
         __NOP();  // POTENTIAL INFINITE LOOP?
     }
-
-    // disable transmitter and enable receiver
-    CLEAR_BIT(Instance_->CR1, USART_CR1_TE);
-    SET_BIT(Instance_->CR1, USART_CR1_RE);
 }
 
 uint32 Uart::Receive(uint8* data, uint16 size)
 {
     // prodecure described at RM0008 page 795
-
-    // receiver is always enabled, no need to do anything
 
     uint32 recv;
 

@@ -1,3 +1,4 @@
+#include "clock.hpp"
 #include "led.hpp"
 #include "uart.hpp"
 
@@ -33,13 +34,12 @@
 
 /// ---------- compile-time input sanitization ----------
 
-void loop();
-
 extern "C"
 {
 
     int main()
     {
+        clockInit();
 
 #if LED1_PIN == B6
         Led led1 = Led(GPIOB, 6);
@@ -62,7 +62,14 @@ extern "C"
         Led ledDebug = Led(GPIOC, 13, true);
         ledDebug.On();
 
+        char hello[] = "hello,oooo ward!\r\n";
+
         while (true) {
+            ledDebug.Off();
+
+            uart.Send((uint8*)hello, sizeof(hello));
+
+            ledDebug.On();
         }
     }
 }

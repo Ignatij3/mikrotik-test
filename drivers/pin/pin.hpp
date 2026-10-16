@@ -26,7 +26,7 @@ public:
         INPUT_ANALOG   = 0b0000,  //!< Configure GPIO as analog input.
         INPUT_FLOATING = 0b0100,  //!< Configure GPIO as floating input.
         /**
-         * @warning Actual pull up or pull down activation is not imlpemented.
+         * @warning Actual pull up or pull down activation is not implemented.
          */
         INPUT_PULL     = 0b1000,  //!< Configure GPIO as input with either pull up or pull down.
         OUTPUT_PP      = 0b0001,  //!< Configure GPIO as output push pull.
