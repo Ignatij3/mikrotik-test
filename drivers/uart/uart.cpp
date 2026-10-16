@@ -114,6 +114,29 @@ uint32 Uart::Receive(uint8* data, uint16 size)
     return recv;
 }
 
+uint32 Uart::Receive_Char(uint8* data, uint16 size, char chr)
+{
+    uint32 recv;
+
+    for (recv = 0; recv < size; recv++) {
+        // wait for data to be transferred to RDR
+        while (!READ_BIT(Instance_->SR, USART_SR_RXNE)) {
+            if (READ_BIT(Instance_->SR, USART_SR_IDLE)) {
+                // if we receive IDLE line when waiting for data, return
+                return recv;
+            }
+        }
+
+        data[recv] = Instance_->DR;
+
+        if (data[recv] == chr) {
+            return recv;
+        }
+    }
+
+    return recv;
+}
+
 void Uart::EnableClock_()
 {
     if (Instance_ == USART1) {

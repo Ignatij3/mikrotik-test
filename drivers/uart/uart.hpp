@@ -67,6 +67,20 @@ public:
      */
     uint32 Receive(uint8* data, uint16 size);
 
+    /**
+     * Receive_Char reads data from the UART peripheral until chr is found.
+     *
+     * If idle frame is detected before 'size' bytes was received,
+     * the reception stops.
+     *
+     * @param[out] data array with length "size" in which the received data is stored.
+     * @param[in] size maximum number of bytes to be received.
+     * @param[in] chr after receiving this character the reception stops.
+     *
+     * @return how many bytes were received before an idle frame.
+     */
+    uint32 Receive_Char(uint8* data, uint16 size, char chr);
+
 private:
     /**
      * Enable_Clock_ starts the clock specific for the UART instance in this class.
