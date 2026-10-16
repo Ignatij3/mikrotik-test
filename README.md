@@ -16,7 +16,8 @@ Hardware used:
 9. USB-A Male to USB-micro male
 10. STLINK-v2
 
-A picture in `docs/hardware.jpg` shows how the development environment looks.
+A picture below shows how the development environment looks
+![](./docs/hardware.jpg)
 
 Software used:
 1. arm-none-eabi-gcc
