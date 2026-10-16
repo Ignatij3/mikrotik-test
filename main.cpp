@@ -70,6 +70,8 @@ extern "C"
             uart.Send((uint8*)hello, sizeof(hello));
 
             ledDebug.On();
+
+            uart.ReceiveChar((uint8*)hello, sizeof(hello), '\r');
         }
     }
 }

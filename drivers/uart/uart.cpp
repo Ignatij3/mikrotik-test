@@ -1,7 +1,5 @@
 #include "uart.hpp"
 
-void uart_init(void);
-
 Uart::Uart(GPIO_TypeDef* rx_port, uint32 rx_pin, GPIO_TypeDef* tx_port, uint32 tx_pin, USART_TypeDef* inst, BaudRate baud) :
     // RX/TX pins configured according to RM0008 page 166, table 24
     Rx_(rx_port, rx_pin, Pin::Config::ALTERNATE_PP),
@@ -32,6 +30,8 @@ Uart::Uart(GPIO_TypeDef* rx_port, uint32 rx_pin, GPIO_TypeDef* tx_port, uint32 t
     // UART needs custom GPIO setup, temporarily here
     CLEAR_BIT(GPIOA->CRH, 0b1111 << 4);
     SET_BIT(GPIOA->CRH, 0b1011 << 4);
+    CLEAR_BIT(GPIOA->CRH, 0b1111 << 8);
+    SET_BIT(GPIOA->CRH, 0b0100 << 8);
 
     // // set word length to 8 bits
     SET_BIT(Instance_->CR1, USART_CR1_M);
@@ -95,6 +95,9 @@ uint32 Uart::Receive(uint8* data, uint16 size)
 
     uint32 recv;
 
+    // wait for first data
+    while (!READ_BIT(Instance_->SR, USART_SR_RXNE)) {}
+
     for (recv = 0; recv < size; recv++) {
         // wait for data to be transferred to RDR
         while (!READ_BIT(Instance_->SR, USART_SR_RXNE)) {
@@ -110,17 +113,14 @@ uint32 Uart::Receive(uint8* data, uint16 size)
     return recv;
 }
 
-uint32 Uart::Receive_Char(uint8* data, uint16 size, char chr)
+uint32 Uart::ReceiveChar(uint8* data, uint16 size, char chr)
 {
     uint32 recv;
 
     for (recv = 0; recv < size; recv++) {
         // wait for data to be transferred to RDR
         while (!READ_BIT(Instance_->SR, USART_SR_RXNE)) {
-            if (READ_BIT(Instance_->SR, USART_SR_IDLE)) {
-                // if we receive IDLE line when waiting for data, return
-                return recv;
-            }
+            __NOP();
         }
 
         data[recv] = Instance_->DR;

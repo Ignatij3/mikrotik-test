@@ -79,7 +79,7 @@ public:
      *
      * @return how many bytes were received before an idle frame.
      */
-    uint32 Receive_Char(uint8* data, uint16 size, char chr);
+    uint32 ReceiveChar(uint8* data, uint16 size, char chr);
 
 private:
     /**
